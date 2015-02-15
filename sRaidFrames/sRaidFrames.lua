@@ -285,18 +285,30 @@ function sRaidFrames:RangeCheck()
 	if not self.opt.RangeCheck then return end
 
 	if IsAltKeyDown() or IsControlKeyDown() or IsShiftKeyDown() then
-		local old_target = GetUnitName("target", false)
+		--old_target, realm = UnitName("target")
+		local playerName = UnitName("target");
+		--ChatFrame1:AddMessage('Hi my name is: ' .. playerName);
+		--DEFAULT_CHAT_FRAME:AddMessage(playerName)
+		--DEFAULT_CHAT_FRAME:AddMessage("test")
 	    for unit in pairs(self.visible) do
-    		TargetUnit(unit);
+    		TargetUnit(unit)
+			DEFAULT_CHAT_FRAME:AddMessage(unit)
 			local result = IsActionInRange(1)
-			if result ~= 0 then --if if the slot has no action or if there is no current target or if the action is in range
+			if result == nil or result == 1 then --if if the slot has no action or if there is no current target or if the action is in range
 				self.frames[unit]:SetAlpha(1)
 			else --else we are out of range
 				self.frames[unit]:SetAlpha(self.opt.RangeAlpha) --set the alpha to be what is in the settings
 			end
+			TargetLastTarget()
 		end
-		ClearTarget();
-		TargetUnit(old_target);
+		--ClearTarget()
+		if playerName ~= nil then
+			--DEFAULT_CHAT_FRAME:AddMessage('/target ' .. playerName)
+			TargetByName(playerName, true)
+		end
+		
+		--TargetUnit(playerName)
+		--TargetUnit("raid1")
 	end
 end
 
